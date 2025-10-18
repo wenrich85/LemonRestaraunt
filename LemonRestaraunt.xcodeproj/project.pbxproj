@@ -27,6 +27,7 @@
 		2BA109672E9F2FE30039B7F1 /* LemonRestaraunt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LemonRestaraunt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA109742E9F2FE70039B7F1 /* LemonRestarauntTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LemonRestarauntTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BA1097E2E9F2FE70039B7F1 /* LemonRestarauntUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LemonRestarauntUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BA109972EA3F3580039B7F1 /* ifStatement.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ifStatement.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -80,6 +81,7 @@
 		2BA1095E2E9F2FE30039B7F1 = {
 			isa = PBXGroup;
 			children = (
+				2BA109972EA3F3580039B7F1 /* ifStatement.playground */,
 				2BA109932EA1C4E20039B7F1 /* Practices */,
 				2BA109692E9F2FE30039B7F1 /* LemonRestaraunt */,
 				2BA109772E9F2FE70039B7F1 /* LemonRestarauntTests */,

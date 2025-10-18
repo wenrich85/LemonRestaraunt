@@ -8,15 +8,26 @@
 import SwiftUI
 
 struct AboutView: View {
+    //variables
+    let userName = "Wendell"
+    @State private var userName2 = ""
+    @State private var orders: Int = 0
     var body: some View {
         NavigationStack{
-            Text("Welcome to Little Lemon!")
+            Text("Welcome \(userName) to Little Lemon!")
                 .font(.title)
                 .padding(.bottom, -200)
             Image("littleLemonLogo")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 300, height: 200)
+            TextField("Enter your name", text:$userName2)
+                .textFieldStyle(.roundedBorder)
+                .padding()
+            Text("Hi \(userName2)!")
+                .padding()
+            Stepper("Orders: \(orders)", value:$orders, in: 0...5)
+                .padding()
         }
 
         .navigationTitle("About Us")
