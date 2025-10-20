@@ -12,6 +12,7 @@ struct AboutView: View {
     let userName = "Wendell"
     @State private var userName2 = ""
     @State private var orders: Int = 0
+    @State private var reservationCount = 0
     var body: some View {
         NavigationStack{
             Text("Welcome \(userName) to Little Lemon!")
@@ -28,6 +29,28 @@ struct AboutView: View {
                 .padding()
             Stepper("Orders: \(orders)", value:$orders, in: 0...5)
                 .padding()
+                .tint(.blue)
+            
+            Button("Order Again"){
+                orders += 1
+            }
+            
+            Text("You have order \(orders) times")
+                .padding()
+            Button("Reset Orders")
+            {
+                orders = 0
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            
+            
+            Button("Add Reservation"){
+                reservationCount += 1
+            }
+            
+            
+            Text(String(repeating:"🍽️", count:reservationCount))
         }
 
         .navigationTitle("About Us")
