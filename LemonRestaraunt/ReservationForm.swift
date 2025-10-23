@@ -9,11 +9,17 @@ import SwiftUI
 
 struct ReservationForm: View {
     @State private var name: String = ""
-    @State  var guestCount = 0
+    @State private var guestCount = 0
     @State private var fieldChanged = false
+    @State private var reservationDate = Date()
+    @State private var allergies = ""
+    @State private var showSummary = false
+    @State private var dateTouched = false
+    private let today = Date()
+    
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("RESERVATION DETAILS")){
                     TextField("Name", text: $name)
@@ -26,18 +32,41 @@ struct ReservationForm: View {
                             .foregroundStyle(.red)
                     }
                     Stepper("Guests:  \(guestCount)", value:$guestCount, in: 1...10)
-                    if guestCount > 5 {
-                        Text("For large parties, we will contact you")
+                    if guestCount > 8 {
+                        Text("For parties larger than 8, we will call to confirm")
                             .foregroundStyle(.yellow)
+                    }else if guestCount >= 5 && guestCount <= 8 {
+                        Text("For large parties, please arrive 10 minutes early")
+                            .foregroundStyle(.blue)
                     }
+                    DatePicker("Date", selection: $reservationDate, displayedComponents: [.date, .hourAndMinute])
+                        .onChange(of: reservationDate){ oldDate, newDate in dateTouched = true
+                            
+                        }
+                    if reservationDate <= today && dateTouched {
+                        Text("Please select a valid date")
+                            .foregroundStyle(.red)
+                    }
+                    
+                    TextField("Allergies", text: $allergies)
+                        .textFieldStyle(.roundedBorder)
                     Button("Confirm Reservation"){
+                        if !name.isEmpty {
+                           showSummary = true
+                        }
                     }
-                    .disabled(name.isEmpty || name == " ")
+                    .disabled(name.isEmpty || name == " " || guestCount <= 0 )
+                    .navigationDestination(isPresented: $showSummary){
+                        ReservationSummaryView(
+                            name: $name,
+                            date: $reservationDate,
+                            guests: $guestCount,
+                            allergiesNotes: $allergies)
+                    }
                 }
                
             }
         }
-        Text(name.isEmpty || guestCount <= 0 ? "" : "Reservation for \(name), party of \(guestCount)")
     }
 }
 
