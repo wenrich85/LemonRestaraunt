@@ -32,3 +32,32 @@ print(menuPrices["Salad"]!) //Optional(13.80)
 let drinkPrices:[String:Double] = ["Coke":4.00, "Pepsi":3.50, "Water":4.50]
 
 print(drinkPrices["Coke"]!)
+//FOREACH PRACTICE
+let fruits = [
+    "Apple":1.50,
+    "Banana":0.58,
+    "Mango":2.20,
+]
+
+fruits.forEach{fruit, price in
+    if price > 1 {
+        print("The \(fruit) costs \(price)")
+    }
+}
+
+let students = [
+    "Ivan":4.0,
+    "Wendell":3.9,
+    "Ken":3.8,
+    "Alex":3.7,
+    "Linda":3.6
+]
+
+//travel the students dictionary using forEach gpa > 3.8
+
+students.forEach{student, gpa in
+    if gpa > 3.8 {
+        print("\(student) currently has a \(gpa) grade point average.")
+
+    }
+}

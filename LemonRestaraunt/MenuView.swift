@@ -13,7 +13,6 @@ struct MenuView: View {
         "Pizza":9.99,
         "Pasta":18.50,
         "Salad":12.20,
-        "Chocolate Cake":5.75,
         "Chicken Tenders":6.99,
         "Cheese Burger":5.45,
         "French Fries":3.50,
@@ -23,9 +22,29 @@ struct MenuView: View {
     ]
     let premiumPrice = 10.0
     let valuePrice = 7.0
-    @State private var showMessage = false
+    @State private var showPremium = false
     @State private var showThankYouMessage = false
+    @State private var showDessert = false
     
+    //computer properties
+    //theu do not store a value
+    // each access recomputes the value
+    
+    /*
+     var propertyName: Type {
+        return the calculated value
+     }
+     */
+    
+    var sortedMenu : [(name: String, price:Double)]{
+        menuItems.sorted {$0.value < $1.value }
+            .map{(key, value) in (name: key, price: value)}
+    }
+    
+    var filteredMenu:[(name:String, price:Double)]{
+        menuItems.filter{ !showPremium || $0.value >= premiumPrice }
+            .map{(key, value) in (name: key, price: value)}
+    }
     var body: some View {
         VStack{
             HStack{
@@ -39,13 +58,26 @@ struct MenuView: View {
             
             //Main
             VStack{
-                Toggle("Show a special text", isOn: $showMessage)
+                Toggle("Show only premium items", isOn: $showPremium)
                     .padding()
                 
-                if showMessage {
-                    Text("You will display this text")
+                if showPremium {
+                    Text("You will display only premium items")
                         .font(.title3)
                         .foregroundColor(.green)
+                  
+                    }
+                Button("View Desserts")
+                {
+                    showDessert.toggle()
+                }
+                .foregroundColor(.black)
+                .padding()
+                .background(Color.green.opacity(0.3))
+                .cornerRadius(10)
+                .sheet(isPresented: $showDessert){
+                    DessertView()
+                }
                 }
             }
             
@@ -62,11 +94,10 @@ struct MenuView: View {
             
             List {
                 Text("We offer \(menuItems.count) menu items.")
-                    .multilineTextAlignment(.center)
                     .font(.title2)
                     .bold()
                 
-                ForEach(menuItems.sorted(by: {$0.key < $1.key}), id: \.key){
+                ForEach(filteredMenu, id: \.name){
                     (name,price) in
                     HStack{
                         VStack{
@@ -75,9 +106,10 @@ struct MenuView: View {
                             Text("$ \(price, specifier: "%.2f")")
                                 .foregroundColor(.secondary)
                                 .italic()
+                                
                         }
                         Spacer()
-                        if price > premiumPrice {
+                        if price >= premiumPrice {
                             HStack{
                                 Image(systemName: "star.fill")
                                 Text("Premium")
@@ -107,7 +139,7 @@ struct MenuView: View {
         }
     }
     
-}
+
 
 #Preview {
     MenuView()
