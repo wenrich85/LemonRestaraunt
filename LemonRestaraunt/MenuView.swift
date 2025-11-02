@@ -9,6 +9,17 @@ import SwiftUI
 
 struct MenuView: View {
     //Variable Section
+    
+    let menuItemsImproved = [
+        MenuItem(name: "Pizza", description: "Cheese and pepperoni", price: 9.99),
+        MenuItem(name: "Steak", description: "Grilled to perfection", price: 15.0),
+        MenuItem(name: "Pasta", description: "Spaguetti", price: 6.0),
+        MenuItem(name: "Caesar Salad", description:"Romaine lettuce with cremy Caesar dreesing", price: 10.99),
+        MenuItem(name: "Soup", description: "Warm and comforting", price: 4.75),//NEW
+        MenuItem(name: "Burger", description: "Grilled beef with cheese", price: 11.00), // NEW
+        MenuItem(name: "Fish Tacos", description: "Crispy fish with spicy mayo", price: 10.25) // NEW
+    ]
+    
     let menuItems = [
         "Pizza":9.99,
         "Pasta":18.50,
@@ -20,6 +31,7 @@ struct MenuView: View {
         "Keylime Pie":8.50,
         
     ]
+    
     let premiumPrice = 10.0
     let valuePrice = 7.0
     @State private var showPremium = false
@@ -36,14 +48,26 @@ struct MenuView: View {
      }
      */
     
-    var sortedMenu : [(name: String, price:Double)]{
-        menuItems.sorted {$0.value < $1.value }
-            .map{(key, value) in (name: key, price: value)}
+    var sortedMenu : [MenuItem]{
+        menuItemsImproved.sorted {$0.name < $1.name}
     }
     
-    var filteredMenu:[(name:String, price:Double)]{
-        menuItems.filter{ !showPremium || $0.value >= premiumPrice }
-            .map{(key, value) in (name: key, price: value)}
+    var filteredMenu:[MenuItem]{
+        showPremium ? menuItemsImproved.filter {$0.price >= 10} : menuItemsImproved
+    }
+    
+    var averagePrice: Double {
+        let total = filteredMenu.map {$0.price}.reduce(0, +)
+        
+        return total / Double(filteredMenu.count)
+    }
+    
+    var regularItemCounter: Int {
+        filteredMenu.filter{$0.price < 10}.count
+    }
+    
+    var premiumItemCounter: Int {
+        filteredMenu.filter{$0.price >= 10}.count
     }
     var body: some View {
         VStack{
@@ -55,6 +79,10 @@ struct MenuView: View {
                     .font(.title)
                     .bold()
             }
+            
+            Text("Average Price: $\(averagePrice, specifier: "%.2f")")
+                .font(.footnote)
+                .foregroundColor(.secondary)
             
             //Main
             VStack{
@@ -97,30 +125,22 @@ struct MenuView: View {
                     .font(.title2)
                     .bold()
                 
-                ForEach(filteredMenu, id: \.name){
-                    (name,price) in
+                ForEach(filteredMenu, id: \.id){
+                    (item) in
                     HStack{
-                        VStack{
-                            Text(name)
+                        VStack(alignment: .leading){
+                            Text(item.name)
                                 .bold()
-                            Text("$ \(price, specifier: "%.2f")")
+                            Text(item.description)
+                            Text("$ \(item.price, specifier: "%.2f")")
                                 .foregroundColor(.secondary)
                                 .italic()
                                 
                         }
                         Spacer()
-                        if price >= premiumPrice {
-                            HStack{
-                                Image(systemName: "star.fill")
-                                Text("Premium")
-                                    .font(.caption)
-                            }
-                            .font(.caption)
-                            .foregroundColor(.orange)
-                            .padding()
-                            .background(Color.orange.opacity(0.1))
-                            .cornerRadius(10)
-                        }else if price < valuePrice {
+                        if item.price >= premiumPrice {
+                            PremiumBadge()
+                        }else if item.price < valuePrice {
                             HStack{
                                 Image(systemName: "dollarsign.ring")
                                 Text("Value")
@@ -134,8 +154,10 @@ struct MenuView: View {
                         }
                     }
                 }
+                
+             
             }
-            
+                Footer(premiumItemCounter: premiumItemCounter,  regularItemCounter: regularItemCounter, averagePrice: averagePrice)
         }
     }
     
